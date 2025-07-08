@@ -13,7 +13,7 @@ from src import DeltaBenchDataset, LLMCritic, DeltaBenchEvaluator, plot_results
 def main():
     # Load dataset
     dataset = DeltaBenchDataset()
-    dataset.load_jsonl('Deltabench_v1.jsonl')
+    dataset.load_jsonl('data/Deltabench_v1.jsonl')
     
     # Initialize critic
     critic = LLMCritic(model_name="gpt-4o-mini")

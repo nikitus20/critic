@@ -2,6 +2,7 @@
 openai==1.40.0
 pandas==2.1.4
 tqdm==4.66.1
+python-dotenv==1.0.0
 
 # Visualization (optional)
 matplotlib==3.8.2

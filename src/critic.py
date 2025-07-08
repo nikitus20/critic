@@ -11,37 +11,57 @@ from .utils import CriticResult
 class LLMCritic:
     """LLM critic for evaluating reasoning steps."""
     
-    def __init__(self, model_name: str = config.DEFAULT_MODEL):
+    def __init__(self, model_name: str = config.DEFAULT_MODEL, prompt_type: str = "deltabench"):
         self.model_name = model_name
+        self.prompt_type = prompt_type
         self.client = OpenAI(api_key=config.OPENAI_API_KEY)
         
+        # Validate prompt type
+        if prompt_type not in config.PROMPTS:
+            raise ValueError(f"Unknown prompt type: {prompt_type}. Available: {list(config.PROMPTS.keys())}")
+        
     def evaluate_reasoning(self, question: str, model_output: str) -> Tuple[str, Dict]:
-        """Evaluate reasoning using LLM critic."""
-        prompt = config.CRITIC_PROMPT.format(
+        """Evaluate reasoning using LLM critic with retry mechanism."""
+        # Get the appropriate prompt template
+        prompt_template = config.PROMPTS[self.prompt_type]
+        prompt = prompt_template.format(
             question=question,
             model_output=model_output
         )
         
-        try:
-            response = self.client.chat.completions.create(
-                model=self.model_name,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=config.TEMPERATURE,
-                top_p=config.TOP_P
-            )
+        # Retry mechanism matching original paper
+        max_retries = 3
+        retry_count = 0
+        
+        while retry_count < max_retries:
+            try:
+                response = self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=config.TEMPERATURE,
+                    top_p=config.TOP_P
+                )
+                
+                output = response.choices[0].message.content
+                token_info = {
+                    "total_tokens": response.usage.total_tokens,
+                    "prompt_tokens": response.usage.prompt_tokens,
+                    "completion_tokens": response.usage.completion_tokens,
+                    "prompt_type": self.prompt_type
+                }
+                
+                # Check if output is valid (not None or empty)
+                if output and output.strip():
+                    return output, token_info
+                    
+            except Exception as e:
+                print(f"Error calling {self.model_name} (attempt {retry_count + 1}): {e}")
+                
+            retry_count += 1
             
-            output = response.choices[0].message.content
-            token_info = {
-                "total_tokens": response.usage.total_tokens,
-                "prompt_tokens": response.usage.prompt_tokens,
-                "completion_tokens": response.usage.completion_tokens
-            }
-            
-            return output, token_info
-            
-        except Exception as e:
-            print(f"Error calling {self.model_name}: {e}")
-            return None, None
+        # All retries failed
+        print(f"Failed to get response after {max_retries} attempts")
+        return None, None
     
     def parse_output(self, critic_output: str, true_error_sections: List[int]) -> CriticResult:
         """Parse critic output into structured result."""

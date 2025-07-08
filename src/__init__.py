@@ -7,12 +7,16 @@ from .critic import LLMCritic
 from .evaluator import DeltaBenchEvaluator
 from .visualizer import plot_results
 from .utils import CriticResult
+from .analysis_utils import display_example, display_critic_comparison, summarize_results
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __all__ = [
     "DeltaBenchDataset",
     "LLMCritic", 
     "DeltaBenchEvaluator",
     "plot_results",
-    "CriticResult"
+    "CriticResult",
+    "display_example",
+    "display_critic_comparison", 
+    "summarize_results"
 ]
