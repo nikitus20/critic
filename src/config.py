@@ -70,3 +70,36 @@ PROMPTS = {
 
 # Default prompt for backward compatibility
 CRITIC_PROMPT = DELTABENCH_PROMPT
+
+# PedCOT-specific configuration
+PEDCOT_CONFIG = {
+    'pedagogical_principles': True,
+    'two_stage_process': True,
+    'principle_weighting': {
+        'remember': 0.3,
+        'understand': 0.4,
+        'apply': 0.3
+    },
+    'error_mapping_strategy': 'weighted_consensus',
+    'domain_mapping': {
+        'math': ['mathematics', 'mathematical', 'number theory', 'algebra', 'geometry', 'calculus'],
+        'programming': ['programming', 'computer science', 'coding', 'algorithm'],
+        'pcb': ['physics', 'chemistry', 'biology', 'science'],
+        'general': []  # Fallback domain
+    },
+    'confidence_threshold': 0.5,  # Minimum confidence for error detection
+    'max_sections_per_analysis': 10  # Limit for performance
+}
+
+# Critic configurations
+CRITIC_CONFIGS = {
+    'direct': {
+        'type': 'DirectCritic',
+        'prompt_type': 'deltabench',
+        'strategy': 'section_by_section'
+    },
+    'pedcot': {
+        'type': 'PedCoTCritic',
+        **PEDCOT_CONFIG
+    }
+}

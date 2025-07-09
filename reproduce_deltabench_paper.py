@@ -19,15 +19,20 @@ from dotenv import load_dotenv
 # Load environment
 load_dotenv('.env')
 
-from src import DeltaBenchDataset, LLMCritic, DeltaBenchEvaluator
+from src import DeltaBenchDataset, LLMCritic, DeltaBenchEvaluator, CriticFactory
 
 def process_single_example(args_data):
     """Process a single example - designed for multiprocessing."""
-    example, model_name, prompt_type = args_data
+    example, model_name, critic_type = args_data
     
     try:
         # Initialize critic for this process
-        critic = LLMCritic(model_name=model_name, prompt_type=prompt_type)
+        if critic_type in ['deltabench', 'direct']:
+            # Use LLMCritic for backward compatibility
+            critic = LLMCritic(model_name=model_name, prompt_type='deltabench')
+        else:
+            # Use factory for PedCOT and other critics
+            critic = CriticFactory.create_critic(critic_type, model_name)
         
         # Extract data
         question = example['question']
@@ -205,9 +210,11 @@ def calculate_paper_metrics(results_file):
     return final_metrics
 
 def main():
-    parser = argparse.ArgumentParser(description='Reproduce DeltaBench paper results')
+    parser = argparse.ArgumentParser(description='Reproduce DeltaBench paper results with different critics')
     parser.add_argument('--model', default='gpt-4o-mini', help='Model name to use')
-    parser.add_argument('--prompt_type', default='deltabench', help='Prompt type (deltabench/pedcot)')
+    parser.add_argument('--critic', default='deltabench', choices=['deltabench', 'direct', 'pedcot'], 
+                       help='Critic type to use (deltabench/direct/pedcot)')
+    parser.add_argument('--prompt_type', default=None, help='Deprecated: use --critic instead')
     parser.add_argument('--dataset', default='Deltabench_v1', help='Dataset name')
     parser.add_argument('--processes', type=int, default=min(10, cpu_count()), help='Number of processes')
     parser.add_argument('--test_size', type=int, default=None, help='Test on subset (for debugging)')
@@ -215,11 +222,16 @@ def main():
     
     args = parser.parse_args()
     
+    # Handle backward compatibility
+    if args.prompt_type and not args.critic:
+        args.critic = args.prompt_type
+        print(f"⚠️  --prompt_type is deprecated, using --critic={args.critic}")
+    
     print('=' * 80)
     print('🚀 REPRODUCING DELTABENCH PAPER RESULTS')
     print('=' * 80)
     print(f"Model: {args.model}")
-    print(f"Prompt type: {args.prompt_type}")
+    print(f"Critic: {args.critic}")
     print(f"Dataset: {args.dataset}")
     print(f"Processes: {args.processes}")
     if args.test_size:
@@ -240,7 +252,7 @@ def main():
     print(f"   Dataset loaded: {len(data)} examples")
     
     # Prepare output file
-    output_file = f'results/{args.dataset}_{args.model}_{args.prompt_type}.jsonl'
+    output_file = f'results/{args.dataset}_{args.model}_{args.critic}.jsonl'
     os.makedirs('results', exist_ok=True)
     
     # Load existing results for resume capability
@@ -268,7 +280,7 @@ def main():
         print("✅ All examples already processed!")
     else:
         # Prepare arguments for multiprocessing
-        process_args = [(example, args.model, args.prompt_type) for example in remaining_data]
+        process_args = [(example, args.model, args.critic) for example in remaining_data]
         
         print(f"🔄 Processing {len(remaining_data)} examples with {args.processes} processes...")
         

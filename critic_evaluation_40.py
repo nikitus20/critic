@@ -170,8 +170,8 @@ def main():
         print(f'  Most missed sections: {dict(missed_counter.most_common(5))}')
     
     # Save results
-    results_df.to_csv('critic_evaluation_40_results.csv', index=False)
-    print(f'\n📁 Results saved to: critic_evaluation_40_results.csv')
+    results_df.to_csv('results/critic_evaluation_40_results.csv', index=False)
+    print(f'\n📁 Results saved to: results/critic_evaluation_40_results.csv')
     
     # Key insights
     print(f'\n💡 KEY INSIGHTS:')

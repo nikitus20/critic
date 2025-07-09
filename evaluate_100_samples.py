@@ -288,7 +288,7 @@ def main():
         print(f'   Most missed sections:    {dict(missed_counter.most_common(5))}')
     
     # === SAVE RESULTS ===
-    output_file = 'evaluation_100_samples_results.csv'
+    output_file = 'results/evaluation_100_samples_results.csv'
     results_df.to_csv(output_file, index=False)
     print(f'\n📁 Results saved to: {output_file}')
     
