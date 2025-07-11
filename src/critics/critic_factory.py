@@ -5,6 +5,7 @@ from typing import Dict, Optional, Type
 from .base_critic import BaseCritic
 from .direct_critic import DirectCritic
 from .pedcot_critic import PedCoTCritic
+from .trivial_critic import TrivialCritic
 
 
 class CriticFactory:
@@ -16,7 +17,9 @@ class CriticFactory:
         'deltabench': DirectCritic,  # Alias for backward compatibility
         'llm': DirectCritic,         # Alias for backward compatibility
         'pedcot': PedCoTCritic,
-        'pedagogical': PedCoTCritic  # Alias
+        'pedagogical': PedCoTCritic,  # Alias
+        'trivial': TrivialCritic,
+        'baseline': TrivialCritic    # Alias for trivial critic
     }
     
     @classmethod
@@ -48,6 +51,9 @@ class CriticFactory:
             # DirectCritic uses prompt_type parameter
             prompt_type = config.get('prompt_type', 'deltabench') if config else 'deltabench'
             return critic_class(model=model, prompt_type=prompt_type, config_dict=config)
+        elif critic_type in ['trivial', 'baseline']:
+            # TrivialCritic doesn't need a model
+            return critic_class(config_dict=config)
         else:
             # PedCoTCritic uses config_dict parameter
             return critic_class(model=model, config_dict=config)
@@ -103,6 +109,10 @@ class CriticFactory:
         elif critic_type in ['pedcot', 'pedagogical']:
             info['type'] = 'Two-stage pedagogical critic with Bloom\'s taxonomy'
             info['features'] = ['Pedagogical principles', 'Two-stage interaction', 'Domain awareness']
+        elif critic_type in ['trivial', 'baseline']:
+            info['type'] = 'Trivial baseline critic that always predicts [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36]'
+            info['features'] = ['No reasoning', 'Fixed predictions', 'Demonstrates evaluation flaw']
+            info['performance'] = 'Achieves 47.4% macro F1 by gaming the filtering logic'
         
         return info
 

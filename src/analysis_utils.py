@@ -15,7 +15,7 @@ def display_example(example: Dict, dataset: 'DeltaBenchDataset', show_sections: 
     # Question
     print("QUESTION:")
     print("-" * 40)
-    print(textwrap.fill(example.get('question', ''), width=80))
+    print(example.get('question', ''))
     print()
     
     # Answer
@@ -43,6 +43,10 @@ def display_example(example: Dict, dataset: 'DeltaBenchDataset', show_sections: 
             print("-" * 40)
             sections = dataset.parse_sections(sections_content)
             
+            # Get human annotations (ground truth)
+            sections_labeled_info = example.get('sections_labeled_info', [])
+            annotations_dict = {info['section_number']: info for info in sections_labeled_info}
+            
             for section_num, content in sections:
                 is_error = section_num in error_sections
                 is_unuseful = section_num in unuseful_sections
@@ -54,6 +58,19 @@ def display_example(example: Dict, dataset: 'DeltaBenchDataset', show_sections: 
                     status = " [UNUSEFUL]"
                 
                 print(f"\nSection {section_num}{status}:")
+                
+                # Add human annotations (marked ground truth)
+                if section_num in annotations_dict:
+                    annotation = annotations_dict[section_num]
+                    if annotation.get('reasoning_correctness') == '1':  # Error marked by human
+                        print(f"  [HUMAN ANNOTATION - GROUND TRUTH]: Error detected")
+                        if annotation.get('explanation'):
+                            print(f"    Explanation: {annotation['explanation']}")
+                        if annotation.get('correction'):
+                            print(f"    Correction: {annotation['correction']}")
+                    elif annotation.get('reasoning_usefulness') == '0':  # Unuseful marked by human
+                        print(f"  [HUMAN ANNOTATION - GROUND TRUTH]: Unuseful section")
+                
                 # Truncate long sections
                 if len(content) > 500:
                     content = content[:500] + "..."
@@ -70,7 +87,7 @@ def display_critic_comparison(example: Dict, results: Dict[str, Dict], dataset: 
     
     # Show question
     print("QUESTION:")
-    print(textwrap.fill(example.get('question', ''), width=80))
+    print(example.get('question', ''))
     print()
     
     # Ground truth
