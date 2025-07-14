@@ -76,26 +76,7 @@ Explanation: The analysis of the inequality \( x + y > 1 \) is incorrect. The ar
 - judge result: \
 """
 
-# Read .env file manually
-try:
-    with open('.env', 'r') as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith('#') and '=' in line:
-                key, value = line.split('=', 1)
-                os.environ[key.strip()] = value.strip()
-    print("Successfully loaded .env file")
-except Exception as e:
-    print(f"Error reading .env file: {e}")
-
-# Debug: print what we got
-print("API Key from env:", os.getenv("OPENAI_API_KEY"))
-
-api_key = os.getenv("OPENAI_API_KEY")
-if api_key is None:
-    raise ValueError("OPENAI_API_KEY not found in environment variables. Check your .env file.")
-
-os.environ["OPENAI_API_KEY"] = api_key
+# API key will be set from command line argument
 os.environ["OPENAI_BASE_URL"] = "https://api.openai.com/v1"
 def extract_first_number(s):
     """
@@ -397,15 +378,19 @@ if __name__ == "__main__":
     start_time = time.perf_counter()   
     parser = argparse.ArgumentParser()
     parser.add_argument('--call_modelname', required=False, default=None, 
-                        help='The path of the data to process.')
-    parser.add_argument('--dataset', required=False, default=None)
+                        help='The model name to use for evaluation.')
+    parser.add_argument('--dataset', required=False, default=None, help='Dataset name')
+    parser.add_argument('--api-key', required=True, help='OpenAI API key')
     
     args = parser.parse_args()
+    # Set API key from command line
+    os.environ["OPENAI_API_KEY"] = args.api_key
+    
     print(f"Model Name: {args.call_modelname}")
-    print(f"dataset: {args.dataset}")
+    print(f"Dataset: {args.dataset}")
 
     origin_file = f"data/{args.dataset}.jsonl"
-    new_file = f"evaluation/{args.dataset}_{args.call_modelname}.jsonl"
+    new_file = f"results/original/{args.dataset}_{args.call_modelname}.jsonl"
     
     # Get unmeasured data
     data_new = deal_down_data(origin_file, new_file)

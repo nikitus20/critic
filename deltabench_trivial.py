@@ -229,7 +229,7 @@ def get_metrics_and_save(processed_data, output_file, dataset_name):
         final_df.to_csv(output_file, index=False)
         print(f"\nResults saved to: {output_file}")
         
-        # Also save detailed results
+        # Also save detailed results  
         detailed_file = output_file.replace('.csv', '_detailed.jsonl')
         with open(detailed_file, 'w', encoding='utf-8') as f:
             for item in processed_data:
@@ -270,7 +270,7 @@ def main():
         # Generate output filename if not provided
         output_file = args.output
         if output_file is None:
-            output_file = f"simple_baseline_{dataset_name}_results.csv"
+            output_file = f"results/trivial/simple_baseline_{dataset_name}_results.csv"
         
         # Calculate and display metrics
         results_df = get_metrics_and_save(processed_data, output_file, dataset_name)

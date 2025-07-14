@@ -54,7 +54,19 @@ Thumbs.db
 # Results and data
 results/
 data/
+evaluation/
 *.log
+*.csv
+*.jsonl
+
+# Experiments results (but keep structure)
+experiments/results/*
+!experiments/results/original/
+!experiments/results/trivial/
+experiments/results/original/*.jsonl
+experiments/results/original/*.csv
+experiments/results/trivial/*.jsonl
+experiments/results/trivial/*.csv
 
 # API Keys (just in case)
 *key*
