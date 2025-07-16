@@ -1,0 +1,113 @@
+[
+  {
+    "id": "math_001",
+    "problem": "A rectangle has length 12 cm and width 8 cm. What is its perimeter?",
+    "steps": [
+      "The perimeter of a rectangle is 2(length + width).",
+      "Given: length = 12 cm, width = 8 cm",
+      "Perimeter = 2(12 + 8) = 2(20) = 40 cm",
+      "Therefore, the perimeter is 40 cm."
+    ],
+    "label": -1
+  },
+  {
+    "id": "math_002",
+    "problem": "Sarah has 24 stickers. She gives 1/3 to her friend. How many stickers does she have left?",
+    "steps": [
+      "Sarah starts with 24 stickers.",
+      "She gives 1/3 of them to her friend: 24 × (1/3) = 8 stickers.",
+      "She has 24 - 8 = 16 stickers left.",
+      "Therefore, Sarah has 16 stickers left."
+    ],
+    "label": -1
+  },
+  {
+    "id": "math_003",
+    "problem": "Tom bought 3 notebooks for $4 each and 2 pens for $1.50 each. How much did he spend in total?",
+    "steps": [
+      "Cost of notebooks: 3 × $4 = $12",
+      "Cost of pens: 2 × $1.50 = $3",
+      "Total cost: $12 + $3 = $15",
+      "Therefore, Tom spent $15 in total."
+    ],
+    "label": -1
+  },
+  {
+    "id": "math_004",
+    "problem": "A square has a side length of 6 units. What is its area?",
+    "steps": [
+      "The area of a square is side × side.",
+      "Given: side length = 6 units",
+      "Area = 6 × 6 = 36 square units",
+      "Wait, let me double-check: 6 × 6 = 35 square units",
+      "Therefore, the area is 35 square units."
+    ],
+    "label": 3
+  },
+  {
+    "id": "math_005",
+    "problem": "Lisa runs 5 km every day. How many kilometers does she run in a week?",
+    "steps": [
+      "Lisa runs 5 km per day.",
+      "There are 7 days in a week.",
+      "Total distance = 5 km/day × 8 days = 40 km",
+      "Therefore, Lisa runs 40 km in a week."
+    ],
+    "label": 2
+  },
+  {
+    "id": "math_006",
+    "problem": "A class has 30 students. If 60% are girls, how many boys are there?",
+    "steps": [
+      "Total students = 30",
+      "Girls = 60% of 30 = 0.60 × 30 = 18 girls",
+      "Boys = Total - Girls = 30 - 18 = 12 boys",
+      "Therefore, there are 12 boys in the class."
+    ],
+    "label": -1
+  },
+  {
+    "id": "math_007",
+    "problem": "What is 25% of 120?",
+    "steps": [
+      "To find 25% of 120, I multiply 120 by 0.25.",
+      "120 × 0.25 = 30",
+      "Therefore, 25% of 120 is 30."
+    ],
+    "label": -1
+  },
+  {
+    "id": "math_008",
+    "problem": "Jake has $50. He spends $12 on lunch and $8 on a book. How much money does he have left?",
+    "steps": [
+      "Jake starts with $50.",
+      "He spends $12 on lunch and $8 on a book.",
+      "Total spent = $12 + $8 = $20",
+      "Money left = $50 - $20 = $30",
+      "Actually, let me recalculate the total spent: $12 + $8 = $19",
+      "So he has $50 - $19 = $31 left."
+    ],
+    "label": 4
+  },
+  {
+    "id": "math_009",
+    "problem": "A triangle has angles of 60°, 70°, and what third angle?",
+    "steps": [
+      "The sum of angles in a triangle is 180°.",
+      "Given angles: 60° and 70°",
+      "Third angle = 180° - 60° - 70° = 50°",
+      "Therefore, the third angle is 50°."
+    ],
+    "label": -1
+  },
+  {
+    "id": "math_010",
+    "problem": "Emma reads 15 pages per hour. How many pages can she read in 4 hours?",
+    "steps": [
+      "Emma reads 15 pages per hour.",
+      "In 4 hours, she can read: 15 × 4 = 60 pages",
+      "Therefore, Emma can read 60 pages in 4 hours."
+    ],
+    "label": -1
+  }
+]
